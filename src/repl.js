@@ -9,6 +9,9 @@ const h = global.hyperscript;
 function repl(root) {
 
   this.root = root;
+  this.width = root.clientWidth;
+  this.height = root.clientHeight;
+
   this.view = null;
   this.logArea = null;
   this.currentArea = null;
@@ -42,32 +45,35 @@ repl.prototype.init = function() {
 repl.prototype.createView = function() {
 
   // HyperScript Notation
-  const html = h("div#view",
-                 {style: {"width": this.root.clientWidth,
-                          "height": this.root.clientHeight,
-                          "overflow": "auto"}},
-                 h("div#logArea"),
-                 h("div#currentArea",
-                   h("div#prompt",
-                     config.prompt,
-                     {style: {"color": "black",
-                              "background-color": "white",
-                              "display": "inline-block",
-                              "vertical-align": "top",
-                              "margin-right": "8px",
-                              "font-family": "monospace"}}),
-                   h("div#editArea",
-                     {contentEditable: true,
-                      style: {"color": "black",
-                              "display": "inline-block",
-                              "vertical-align": "top",
-                              "font-family": "monospace"},
-                      onkeypress: e => this.onEditAreaKeyPress(e)
-                     })),
-                 h("div#paddingArea"),
-                 h("iframe#sandboxFrame",
-                   {style: {display: "none"}})
-               )
+  const html = h(
+    "div#view",
+    {style: {"width": this.width,
+             "height": this.height,
+             "overflow": "auto"}},
+    h("div#logArea",
+      {style: {"width": this.width}}),
+    h("div#currentArea",
+      {style: {"width": this.width}},
+      h("div#prompt",
+        config.prompt,
+        {style: {"color": "black",
+                 "background-color": "white",
+                 "display": "inline-block",
+                 "vertical-align": "top",
+                 "margin-right": "8px",
+                 "font-family": "monospace"}}),
+      h("div#editArea",
+        {contentEditable: true,
+         style: {"color": "black",
+                 "display": "inline-block",
+                 "vertical-align": "top",
+                 "font-family": "monospace"},
+         onkeypress: e => this.onEditAreaKeyPress(e)
+        })),
+    h("div#paddingArea"),
+    h("iframe#sandboxFrame",
+      {style: {display: "none"}})
+    )   
 
   this.root.appendChild(html);
 
@@ -142,22 +148,26 @@ repl.prototype.appendLog = function(code) {
 
 repl.prototype.createLogElem = function(logText) {
 
-  const html = h("div.log",
-                 h("div.logPrompt",
-                   config.prompt,
-                   {style: {"color": "black",
-                            "background-color": "white",
-                            "display": "inline-block",
-                            "vertical-align": "top",
-                            "margin-right": "8px",
-                            "font-family": "monospace"}}),
-                  h("div.logText",
-                    logText,
-                    {style: {"color": "black",
-                             "display": "inline-block",
-                             "vertical-align": "top",
-                             "font-family": "monospace"}})
-               )
+  const html = h(
+    "div.log",
+    {style: {"width": this.width}},
+    h("div.logPrompt",
+      config.prompt,
+      {style: {"color": "black",
+               "background-color": "white",
+               // "float": "left",
+               "display": "inline-block",
+               "vertical-align": "top",
+               "margin-right": "8px",
+               "font-family": "monospace"}}),
+     h("div.logText",
+       logText,
+       {style: {"color": "black",
+                // "float": "right",
+                "display": "inline-block",
+                "vertical-align": "top",
+                "font-family": "monospace"}})
+    )   
 
   return html;
  
@@ -172,22 +182,26 @@ repl.prototype.appendResult = function(result) {
 
 repl.prototype.createResultElem = function(logText) {
 
-  const html = h("div.log",
-                 h("div.logPrompt",
-                   config.resultPrompt,
-                   {style: {"color": "black",
-                            "background-color": "white",
-                            "display": "inline-block",
-                            "vertical-align": "top",
-                            "margin-right": "8px",
-                            "font-family": "monospace"}}),
-                  h("div.logText",
-                    logText,
-                    {style: {"color": "black",
-                             "display": "inline-block",
-                             "vertical-align": "top",
-                             "font-family": "monospace"}})
-               )
+  const html = h(
+    "div.log",
+    {style: {"width": this.width}},
+    h("div.logPrompt",
+      config.resultPrompt,
+      {style: {"color": "black",
+               "background-color": "white",
+               // "float": "left",
+               "display": "inline-block",
+               "vertical-align": "top",
+               "margin-right": "8px",
+               "font-family": "monospace"}}),
+     h("div.logText",
+       logText,
+       {style: {"color": "black",
+                // "float": "right",
+                "display": "inline-block",
+                "vertical-align": "top",
+                "font-family": "monospace"}})
+    )   
 
   return html;
  
