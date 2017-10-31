@@ -52,20 +52,19 @@ repl.prototype.handleEnterKey = function() {
   try {
     esprima.parseScript(code);
   } catch(e) {
+
+    /* will not handle error. just ignoring it for now.
+    if(e.description == "Unexpected token ILLEGAL") {
+      console.log(e);
+      this.handleIllegalCodeError();
+    }
+    */
+
     return;
   }
 
-  const log = new global.log(this);
-  this.currentLog = log;
+  this.processCode(code);
 
-  const result = this.evalCode(code);
-
-  log.code(code);
-  log.result(result);
-  log.display();
-
-  this.resetEditArea();
- 
 }
 
 } // namespace boundary

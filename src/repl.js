@@ -91,6 +91,21 @@ repl.prototype.createSandbox = function() {
 
 }
 
+repl.prototype.processCode = function(code) {
+
+  const log = new global.log(this);
+  this.currentLog = log;
+
+  const result = this.evalCode(code);
+
+  log.code(code);
+  log.result(result);
+  log.display();
+
+  this.resetEditArea();
+
+}
+
 repl.prototype.evalCode = function(code) {
 
   let result = "";

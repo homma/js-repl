@@ -49,6 +49,21 @@ repl.prototype.handleCancel = function() {
 
   log.display();
 
+  this.resetEditArea();
+
+}
+
+repl.prototype.handleIllegalCodeError = function() {
+
+  const log = new global.log(this);
+  this.currentLog = log;
+
+  const code = this.editArea.innerText;
+
+  log.code(code);
+  log.result("Error: Unexpected token ILLEGAL");
+
+  log.display();
 
   this.resetEditArea();
 

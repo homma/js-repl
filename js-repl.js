@@ -206,6 +206,21 @@ repl.prototype.createSandbox = function() {
 
 }
 
+repl.prototype.processCode = function(code) {
+
+  const log = new global.log(this);
+  this.currentLog = log;
+
+  const result = this.evalCode(code);
+
+  log.code(code);
+  log.result(result);
+  log.display();
+
+  this.resetEditArea();
+
+}
+
 repl.prototype.evalCode = function(code) {
 
   let result = "";
@@ -276,6 +291,21 @@ repl.prototype.handleCancel = function() {
 
   log.display();
 
+  this.resetEditArea();
+
+}
+
+repl.prototype.handleIllegalCodeError = function() {
+
+  const log = new global.log(this);
+  this.currentLog = log;
+
+  const code = this.editArea.innerText;
+
+  log.code(code);
+  log.result("Error: Unexpected token ILLEGAL");
+
+  log.display();
 
   this.resetEditArea();
 
@@ -336,20 +366,19 @@ repl.prototype.handleEnterKey = function() {
   try {
     esprima.parseScript(code);
   } catch(e) {
+
+    /* will not handle error. just ignoring it for now.
+    if(e.description == "Unexpected token ILLEGAL") {
+      console.log(e);
+      this.handleIllegalCodeError();
+    }
+    */
+
     return;
   }
 
-  const log = new global.log(this);
-  this.currentLog = log;
+  this.processCode(code);
 
-  const result = this.evalCode(code);
-
-  log.code(code);
-  log.result(result);
-  log.display();
-
-  this.resetEditArea();
- 
 }
 
 } // namespace boundary
