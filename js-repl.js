@@ -188,7 +188,8 @@ repl.prototype.createView = function() {
                  "display": "inline-block",
                  "vertical-align": "top",
                  "font-family": "monospace"},
-         onkeypress: e => this.onEditAreaKeyPress(e)
+         onkeypress: e => this.onEditAreaKeyPress(e),
+         onkeydown: e => this.onEditAreaKeyDown(e)
         })),
     h("div#paddingArea"),
     h("iframe#sandboxFrame",
@@ -204,6 +205,33 @@ repl.prototype.createSandbox = function() {
   global.sandbox.init(this);
 
 }
+
+repl.prototype.evalCode = function(code) {
+
+  let result = "";
+
+  try {
+
+    result += this.sandbox.eval(code);
+
+  } catch(e) {
+
+    result += e;
+
+  }
+
+  return result;
+
+}
+
+} // namespace boundary
+/*
+ * @aurthor Daisuke Homma
+ */
+
+{ // namespace boundary
+
+const repl = global.repl;
 
 repl.prototype.resetEditArea = function() {
 
@@ -231,19 +259,14 @@ repl.prototype.resetCaret = function() {
 
 }
 
-repl.prototype.onEditAreaKeyPress = function(e) {
+repl.prototype.clearScreen = function() {
 
-  // console.log(e);
-
-  if( e.keyCode == 13) { // Enter
-
-    this.handleEnterKey();
-
-  }
+  console.log("clear screen");
+  // to be implemented
 
 }
 
-repl.prototype.handleEnterKey = function() {
+repl.prototype.handleCancel = function() {
 
   const log = new global.log(this);
   this.currentLog = log;
@@ -251,31 +274,82 @@ repl.prototype.handleEnterKey = function() {
   const code = this.editArea.innerText;
   log.code(code);
 
-  const result = this.evalCode(code);
-  log.result(result);
+  log.display();
 
+
+  this.resetEditArea();
+
+}
+
+} // namespace boundary
+/*
+ * @aurthor Daisuke Homma
+ */
+
+{ // namespace boundary
+
+const repl = global.repl;
+
+repl.prototype.onEditAreaKeyDown = function(e) {
+
+  if(0) {
+    console.log(e);
+    console.log(e.keyCode);
+    console.log(e.key);
+  }
+
+  if( e.key == "l" ) {
+
+    if(e.ctrlKey) {
+      this.clearScreen();
+    }
+
+  }
+}
+
+repl.prototype.onEditAreaKeyPress = function(e) {
+
+  if(0) {
+    console.log(e);
+    console.log(e.keyCode);
+    console.log(e.key);
+  }
+
+  if( e.key == "Enter" ) {
+
+    this.handleEnterKey();
+
+  } else if( e.key == "c" ) {
+
+    if(e.ctrlKey) {
+      this.handleCancel();
+    }
+
+  }
+
+}
+
+repl.prototype.handleEnterKey = function() {
+
+  const code = this.editArea.innerText;
+
+  try {
+    esprima.parseScript(code);
+  } catch(e) {
+    return;
+  }
+
+  const log = new global.log(this);
+  this.currentLog = log;
+
+  const result = this.evalCode(code);
+
+  log.code(code);
+  log.result(result);
   log.display();
 
   this.resetEditArea();
  
-}
-
-repl.prototype.evalCode = function(code) {
-
-  let result = "";
-
-  try {
-
-    result += this.sandbox.eval(code);
-
-  } catch(e) {
-
-    result += e;
-
-  }
-
-  return result;
-
 }
 
 } // namespace boundary
