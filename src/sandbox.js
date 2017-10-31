@@ -6,7 +6,7 @@
 
 const sandbox = {};
 
-global.sandbox = sandbox;
+jsrepl.sandbox = sandbox;
 
 sandbox.init = repl => {
 

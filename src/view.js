@@ -4,7 +4,7 @@
 
 { // namespace boundary
 
-const repl = global.repl;
+const repl = jsrepl.repl;
 
 repl.prototype.resetEditArea = function() {
 
@@ -41,7 +41,7 @@ repl.prototype.clearScreen = function() {
 
 repl.prototype.handleCancel = function() {
 
-  const log = new global.log(this);
+  const log = new jsrepl.log(this);
   this.currentLog = log;
 
   const code = this.editArea.innerText;
@@ -55,7 +55,7 @@ repl.prototype.handleCancel = function() {
 
 repl.prototype.handleIllegalCodeError = function() {
 
-  const log = new global.log(this);
+  const log = new jsrepl.log(this);
   this.currentLog = log;
 
   const code = this.editArea.innerText;

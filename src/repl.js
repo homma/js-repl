@@ -4,7 +4,7 @@
 
 { // namespace boundary
 
-const h = jsutils.hyperscript;
+const h = jsrepl.hyperscript;
 
 const repl = function(root) {
 
@@ -26,7 +26,7 @@ const repl = function(root) {
 
 };
 
-global.repl = repl;
+jsrepl.repl = repl;
 
 repl.prototype.init = function() {
 
@@ -60,7 +60,7 @@ repl.prototype.createView = function() {
     h("div#currentArea",
       {style: {"width": this.width}},
       h("div#prompt",
-        config.prompt,
+        jsrepl.config.prompt,
         {style: {"color": "black",
                  "background-color": "white",
                  "display": "inline-block",
@@ -87,13 +87,13 @@ repl.prototype.createView = function() {
 
 repl.prototype.createSandbox = function() {
 
-  global.sandbox.init(this);
+  jsrepl.sandbox.init(this);
 
 }
 
 repl.prototype.processCode = function(code) {
 
-  const log = new global.log(this);
+  const log = new jsrepl.log(this);
   this.currentLog = log;
 
   const result = this.evalCode(code);

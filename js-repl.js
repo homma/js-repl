@@ -2,23 +2,27 @@
  * @author Daisuke Homma
  */
 
-const global = {};
-const jsutils = {};
-const config = {};
+const jsrepl = {};
+jsrepl.config = {};
+
+{ // namespace boundary
+
+const config = jsrepl.config;
 
 config.rootElementId = "js-repl";
 config.prompt = ">";
 config.resultPrompt = "=>";
 
+config.debug = false;
+
+} // namespace boundary
 /*
  * @author Daisuke Homma
  */
 
 { // namespace boundary
 
-const lib = jsutils || window
-
-lib.hyperscript = function(tag, ...args) {
+jsrepl.hyperscript = function(tag, ...args) {
 
   const elem = handleTag(tag);
   handleArgs(elem, args);
@@ -119,7 +123,7 @@ const handleArgs = (elem, args) => {
 
 { // namespace boundary
 
-const h = jsutils.hyperscript;
+const h = jsrepl.hyperscript;
 
 const repl = function(root) {
 
@@ -141,7 +145,7 @@ const repl = function(root) {
 
 };
 
-global.repl = repl;
+jsrepl.repl = repl;
 
 repl.prototype.init = function() {
 
@@ -175,7 +179,7 @@ repl.prototype.createView = function() {
     h("div#currentArea",
       {style: {"width": this.width}},
       h("div#prompt",
-        config.prompt,
+        jsrepl.config.prompt,
         {style: {"color": "black",
                  "background-color": "white",
                  "display": "inline-block",
@@ -202,13 +206,13 @@ repl.prototype.createView = function() {
 
 repl.prototype.createSandbox = function() {
 
-  global.sandbox.init(this);
+  jsrepl.sandbox.init(this);
 
 }
 
 repl.prototype.processCode = function(code) {
 
-  const log = new global.log(this);
+  const log = new jsrepl.log(this);
   this.currentLog = log;
 
   const result = this.evalCode(code);
@@ -246,7 +250,7 @@ repl.prototype.evalCode = function(code) {
 
 { // namespace boundary
 
-const repl = global.repl;
+const repl = jsrepl.repl;
 
 repl.prototype.resetEditArea = function() {
 
@@ -283,7 +287,7 @@ repl.prototype.clearScreen = function() {
 
 repl.prototype.handleCancel = function() {
 
-  const log = new global.log(this);
+  const log = new jsrepl.log(this);
   this.currentLog = log;
 
   const code = this.editArea.innerText;
@@ -297,7 +301,7 @@ repl.prototype.handleCancel = function() {
 
 repl.prototype.handleIllegalCodeError = function() {
 
-  const log = new global.log(this);
+  const log = new jsrepl.log(this);
   this.currentLog = log;
 
   const code = this.editArea.innerText;
@@ -318,11 +322,11 @@ repl.prototype.handleIllegalCodeError = function() {
 
 { // namespace boundary
 
-const repl = global.repl;
+const repl = jsrepl.repl;
 
 repl.prototype.onEditAreaKeyDown = function(e) {
 
-  if(0) {
+  if(jsrepl.config.debug) {
     console.log(e);
     console.log(e.keyCode);
     console.log(e.key);
@@ -339,7 +343,7 @@ repl.prototype.onEditAreaKeyDown = function(e) {
 
 repl.prototype.onEditAreaKeyPress = function(e) {
 
-  if(0) {
+  if(jsrepl.config.debug) {
     console.log(e);
     console.log(e.keyCode);
     console.log(e.key);
@@ -388,7 +392,7 @@ repl.prototype.handleEnterKey = function() {
 
 { // namespace boundary
 
-const h = jsutils.hyperscript;
+const h = jsrepl.hyperscript;
 
 const log = function(repl) {
 
@@ -401,7 +405,7 @@ const log = function(repl) {
 
 }
 
-global.log = log;
+jsrepl.log = log;
 
 log.prototype.display = function() {
 
@@ -440,7 +444,7 @@ log.prototype.createCodeElem = function(code) {
     "div.code",
     {style: {"width": this.width}},
     h("div.codePrompt",
-      config.prompt,
+      jsrepl.config.prompt,
       {style: {"color": "black",
                "background-color": "white",
                "display": "inline-block",
@@ -484,7 +488,7 @@ log.prototype.createResultElem = function(result) {
     "div.result",
     {style: {"width": this.width}},
     h("div.resultPrompt",
-      config.resultPrompt,
+      jsrepl.config.resultPrompt,
       {style: {"color": "black",
                "background-color": "white",
                // "float": "left",
@@ -515,7 +519,7 @@ log.prototype.createResultElem = function(result) {
 
 const sandbox = {};
 
-global.sandbox = sandbox;
+jsrepl.sandbox = sandbox;
 
 sandbox.init = repl => {
 
@@ -550,9 +554,8 @@ console.prototype.log = function(content) {
 
 const main = () => {
 
-  const root = document.getElementById(config.rootElementId);
-  console.log(root);
-  const app = new global.repl(root);
+  const root = document.getElementById(jsrepl.config.rootElementId);
+  const app = new jsrepl.repl(root);
 
 }
 

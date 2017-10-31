@@ -4,11 +4,11 @@
 
 { // namespace boundary
 
-const repl = global.repl;
+const repl = jsrepl.repl;
 
 repl.prototype.onEditAreaKeyDown = function(e) {
 
-  if(0) {
+  if(jsrepl.config.debug) {
     console.log(e);
     console.log(e.keyCode);
     console.log(e.key);
@@ -25,7 +25,7 @@ repl.prototype.onEditAreaKeyDown = function(e) {
 
 repl.prototype.onEditAreaKeyPress = function(e) {
 
-  if(0) {
+  if(jsrepl.config.debug) {
     console.log(e);
     console.log(e.keyCode);
     console.log(e.key);

@@ -7,9 +7,8 @@
 
 const main = () => {
 
-  const root = document.getElementById(config.rootElementId);
-  console.log(root);
-  const app = new global.repl(root);
+  const root = document.getElementById(jsrepl.config.rootElementId);
+  const app = new jsrepl.repl(root);
 
 }
 

@@ -4,7 +4,7 @@
 
 { // namespace boundary
 
-const h = jsutils.hyperscript;
+const h = jsrepl.hyperscript;
 
 const log = function(repl) {
 
@@ -17,7 +17,7 @@ const log = function(repl) {
 
 }
 
-global.log = log;
+jsrepl.log = log;
 
 log.prototype.display = function() {
 
@@ -56,7 +56,7 @@ log.prototype.createCodeElem = function(code) {
     "div.code",
     {style: {"width": this.width}},
     h("div.codePrompt",
-      config.prompt,
+      jsrepl.config.prompt,
       {style: {"color": "black",
                "background-color": "white",
                "display": "inline-block",
@@ -100,7 +100,7 @@ log.prototype.createResultElem = function(result) {
     "div.result",
     {style: {"width": this.width}},
     h("div.resultPrompt",
-      config.resultPrompt,
+      jsrepl.config.resultPrompt,
       {style: {"color": "black",
                "background-color": "white",
                // "float": "left",

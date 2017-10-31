@@ -4,9 +4,7 @@
 
 { // namespace boundary
 
-const lib = jsutils || window
-
-lib.hyperscript = function(tag, ...args) {
+jsrepl.hyperscript = function(tag, ...args) {
 
   const elem = handleTag(tag);
   handleArgs(elem, args);
