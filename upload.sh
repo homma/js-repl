@@ -5,7 +5,7 @@
 ##
 ## to create a repository
 ##
-## create repo from github.com, click '+' menu to create new repository.
+## create repo at the github.com, click '+' menu to create new repository.
 ## then run below in the project directory.
 ## git init
 ## git commit -m 'first commit'
@@ -15,7 +15,7 @@
 ##
 ## to clone a repository
 ##
-## check the repository url from the [Clone or download] button
+## check the repo url at the github.com from the [Clone or download] button
 ## git clone https://github.com/<user>/<project>.git
 ## modify files and run upload.sh
 ##
