@@ -168,7 +168,8 @@ repl.prototype.createView = function() {
     "div#view",
     {style: {"width": this.width,
              "height": this.height,
-             "overflow": "auto"}},
+             "overflow-x": "visible",
+             "overflow-y": "auto"}},
     h("div#logArea",
       {style: {"width": this.width}}),
     h("div#currentArea",
@@ -339,7 +340,6 @@ log.prototype.createCodeElem = function(code) {
       config.prompt,
       {style: {"color": "black",
                "background-color": "white",
-               // "float": "left",
                "display": "inline-block",
                "vertical-align": "top",
                "margin-right": "8px",
@@ -360,14 +360,14 @@ log.prototype.createCodeElem = function(code) {
 log.prototype.createOutputElem = function(content) {
 
   const elem = h(
-    "div.log",
+    "div.output",
     {style: {"width": this.width}},
      h("div.output",
        content,
        {style: {"color": "black",
                 "width": this.width,
-                "display": "inline-block",
                 "vertical-align": "top",
+                "word-wrap": "break-word",
                 "font-family": "monospace"}})
   )   
 
@@ -378,7 +378,7 @@ log.prototype.createOutputElem = function(content) {
 log.prototype.createResultElem = function(result) {
 
   const elem = h(
-    "div.log",
+    "div.result",
     {style: {"width": this.width}},
     h("div.resultPrompt",
       config.resultPrompt,
@@ -393,8 +393,9 @@ log.prototype.createResultElem = function(result) {
        result,
        {style: {"color": "black",
                 // "float": "right",
-                "display": "inline-block",
+                "display": "inline",
                 "vertical-align": "top",
+                "word-wrap": "break-word",
                 "font-family": "monospace"}})
   )   
 
