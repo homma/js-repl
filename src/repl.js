@@ -4,9 +4,9 @@
 
 { // namespace boundary
 
-const h = global.hyperscript;
+const h = jsutils.hyperscript;
 
-function repl(root) {
+const repl = function(root) {
 
   this.root = root;
   this.width = root.clientWidth;
@@ -19,6 +19,8 @@ function repl(root) {
   this.editArea = null;
   this.paddingArea = null;
   this.sandbox = null;
+
+  this.currentLog = null;
 
   this.init();
 
@@ -37,6 +39,8 @@ repl.prototype.init = function() {
   this.editArea = document.getElementById("editArea");
   this.paddingArea = document.getElementById("paddingArea");
   this.sandbox = document.getElementById("sandboxFrame").contentWindow;
+
+  this.createSandbox();
 
   this.editArea.focus();
 
@@ -79,6 +83,19 @@ repl.prototype.createView = function() {
 
 }
 
+repl.prototype.createSandbox = function() {
+
+  global.sandbox.init(this);
+
+}
+
+repl.prototype.resetEditArea = function() {
+
+  this.editArea.innerHTML = "";
+  // this.resetCaret();
+
+}
+
 repl.prototype.resetCaret = function() {
 
   const pos = 0;
@@ -104,107 +121,45 @@ repl.prototype.onEditAreaKeyPress = function(e) {
 
   if( e.keyCode == 13) { // Enter
 
-    const code = this.editArea.innerText;
+    this.handleEnterKey();
 
-    const result = this.evalCode(code);
-
-    this.appendLog(code);
-    this.appendResult(result);
-
-    this.editArea.innerHTML = "";
-    // this.resetCaret();
   }
 
+}
+
+repl.prototype.handleEnterKey = function() {
+
+  const log = new global.log(this);
+  this.currentLog = log;
+
+  const code = this.editArea.innerText;
+  log.code(code);
+
+  const result = this.evalCode(code);
+  log.result(result);
+
+  log.display();
+
+  this.resetEditArea();
+ 
 }
 
 repl.prototype.evalCode = function(code) {
 
-  let result = null;
+  let result = "";
 
   try {
 
-    result = this.sandbox.eval(code);
-    // console.log("result: ", result);
+    result += this.sandbox.eval(code);
 
   } catch(e) {
 
-    result = e;
-    // console.log("error", e);
+    result += e;
 
   }
 
-  // const ret = toString.call(result) + ": " + result;
-  const ret = "" + result;
-  return ret;
+  return result;
 
-}
-
-repl.prototype.appendLog = function(code) {
-
-  const elem = this.createLogElem(code);
-  this.view.insertBefore(elem, this.currentArea);
-
-}
-
-repl.prototype.createLogElem = function(logText) {
-
-  const html = h(
-    "div.log",
-    {style: {"width": this.width}},
-    h("div.logPrompt",
-      config.prompt,
-      {style: {"color": "black",
-               "background-color": "white",
-               // "float": "left",
-               "display": "inline-block",
-               "vertical-align": "top",
-               "margin-right": "8px",
-               "font-family": "monospace"}}),
-     h("div.logText",
-       logText,
-       {style: {"color": "black",
-                // "float": "right",
-                "display": "inline-block",
-                "vertical-align": "top",
-                "font-family": "monospace"}})
-    )   
-
-  return html;
- 
-}
-
-repl.prototype.appendResult = function(result) {
-
-  const elem = this.createResultElem(result);
-  this.view.insertBefore(elem, this.currentArea);
-
-}
-
-repl.prototype.createResultElem = function(logText) {
-
-  const html = h(
-    "div.log",
-    {style: {"width": this.width}},
-    h("div.logPrompt",
-      config.resultPrompt,
-      {style: {"color": "black",
-               "background-color": "white",
-               // "float": "left",
-               "display": "inline-block",
-               "vertical-align": "top",
-               "margin-right": "8px",
-               "font-family": "monospace"}}),
-     h("div.logText",
-       logText,
-       {style: {"color": "black",
-                // "float": "right",
-                "display": "inline-block",
-                "vertical-align": "top",
-                "font-family": "monospace"}})
-    )   
-
-  return html;
- 
 }
 
 } // namespace boundary

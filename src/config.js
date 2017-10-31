@@ -3,6 +3,7 @@
  */
 
 const global = {};
+const jsutils = {};
 const config = {};
 
 config.rootElementId = "js-repl";

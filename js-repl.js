@@ -3,6 +3,7 @@
  */
 
 const global = {};
+const jsutils = {};
 const config = {};
 
 config.rootElementId = "js-repl";
@@ -15,7 +16,9 @@ config.resultPrompt = "=>";
 
 { // namespace boundary
 
-global.hyperscript = function(tag, ...args) {
+const lib = jsutils || window
+
+lib.hyperscript = function(tag, ...args) {
 
   const elem = handleTag(tag);
   handleArgs(elem, args);
@@ -24,7 +27,21 @@ global.hyperscript = function(tag, ...args) {
 
 }
 
+// utility functions
+const isNull = val => val == null;
+const isString = val => typeof val === "string";
+const isNumber = val => typeof val === "number";
+const isDate = val => val instanceof Date;
+const isBoolean = val => typeof val === "boolean";
+const isHTMLElement = val => ( (val instanceof Node) ||
+                               (val instanceof HTMLElement) );
+const isObject = val => typeof val === "object";
+const toCamel = str => str.replace(/-([a-z])/g,
+                                   (match, p1) => p1.toUpperCase());
+
 const handleTag = tag => {
+
+  if(!isString(tag)) { console.error("tag should be a string") }
 
   const [t1, id] = tag.split("#");
   const [t2, ...cls] = t1.split(".");
@@ -41,17 +58,6 @@ const handleTag = tag => {
 }
 
 const handleArgs = (elem, args) => {
-
-  const isNull = val => val == null;
-  const isString = val => typeof val === "string";
-  const isNumber = val => typeof val === "number";
-  const isDate = val => val instanceof Date;
-  const isBoolean = val => typeof val === "boolean";
-  const isHTMLElement = val => ( (val instanceof Node) ||
-                                 (val instanceof HTMLElement) );
-  const isObject = val => typeof val === "object";
-  const toCamel = str => str.replace(/-([a-z])/g,
-                                     (match, p1) => p1.toUpperCase());
 
   const handleStyle = style => {
     for(var prop in style) {
@@ -113,9 +119,9 @@ const handleArgs = (elem, args) => {
 
 { // namespace boundary
 
-const h = global.hyperscript;
+const h = jsutils.hyperscript;
 
-function repl(root) {
+const repl = function(root) {
 
   this.root = root;
   this.width = root.clientWidth;
@@ -128,6 +134,8 @@ function repl(root) {
   this.editArea = null;
   this.paddingArea = null;
   this.sandbox = null;
+
+  this.currentLog = null;
 
   this.init();
 
@@ -146,6 +154,8 @@ repl.prototype.init = function() {
   this.editArea = document.getElementById("editArea");
   this.paddingArea = document.getElementById("paddingArea");
   this.sandbox = document.getElementById("sandboxFrame").contentWindow;
+
+  this.createSandbox();
 
   this.editArea.focus();
 
@@ -188,6 +198,19 @@ repl.prototype.createView = function() {
 
 }
 
+repl.prototype.createSandbox = function() {
+
+  global.sandbox.init(this);
+
+}
+
+repl.prototype.resetEditArea = function() {
+
+  this.editArea.innerHTML = "";
+  // this.resetCaret();
+
+}
+
 repl.prototype.resetCaret = function() {
 
   const pos = 0;
@@ -213,54 +236,106 @@ repl.prototype.onEditAreaKeyPress = function(e) {
 
   if( e.keyCode == 13) { // Enter
 
-    const code = this.editArea.innerText;
+    this.handleEnterKey();
 
-    const result = this.evalCode(code);
-
-    this.appendLog(code);
-    this.appendResult(result);
-
-    this.editArea.innerHTML = "";
-    // this.resetCaret();
   }
 
+}
+
+repl.prototype.handleEnterKey = function() {
+
+  const log = new global.log(this);
+  this.currentLog = log;
+
+  const code = this.editArea.innerText;
+  log.code(code);
+
+  const result = this.evalCode(code);
+  log.result(result);
+
+  log.display();
+
+  this.resetEditArea();
+ 
 }
 
 repl.prototype.evalCode = function(code) {
 
-  let result = null;
+  let result = "";
 
   try {
 
-    result = this.sandbox.eval(code);
-    // console.log("result: ", result);
+    result += this.sandbox.eval(code);
 
   } catch(e) {
 
-    result = e;
-    // console.log("error", e);
+    result += e;
 
   }
 
-  // const ret = toString.call(result) + ": " + result;
-  const ret = "" + result;
-  return ret;
+  return result;
 
 }
 
-repl.prototype.appendLog = function(code) {
+} // namespace boundary
+/*
+ * @aurthor Daisuke Homma
+ */
 
-  const elem = this.createLogElem(code);
-  this.view.insertBefore(elem, this.currentArea);
+{ // namespace boundary
+
+const h = jsutils.hyperscript;
+
+const log = function(repl) {
+
+  this.repl = repl;
+  this.width = repl.width;
+
+  this.codeElem = null;
+  this.resultElem = null;
+  this.outputElem = null;
 
 }
 
-repl.prototype.createLogElem = function(logText) {
+global.log = log;
 
-  const html = h(
+log.prototype.display = function() {
+
+  const elem = h(
     "div.log",
+    this.codeElem,
+    this.resultElem,
+    this.outputElem
+  )
+    
+  this.repl.logArea.appendChild(elem);
+
+}
+
+log.prototype.code = function(code) {
+
+  this.codeElem = this.createCodeElem(code);
+
+}
+
+log.prototype.result = function(result) {
+
+  this.resultElem = this.createResultElem(result);
+
+}
+
+log.prototype.output = function(output) {
+
+  this.outputElem = this.createOutputElem(output);
+
+}
+
+log.prototype.createCodeElem = function(code) {
+
+  const elem = h(
+    "div.code",
     {style: {"width": this.width}},
-    h("div.logPrompt",
+    h("div.codePrompt",
       config.prompt,
       {style: {"color": "black",
                "background-color": "white",
@@ -269,32 +344,25 @@ repl.prototype.createLogElem = function(logText) {
                "vertical-align": "top",
                "margin-right": "8px",
                "font-family": "monospace"}}),
-     h("div.logText",
-       logText,
+     h("div.codeText",
+       code,
        {style: {"color": "black",
                 // "float": "right",
                 "display": "inline-block",
                 "vertical-align": "top",
                 "font-family": "monospace"}})
-    )   
+  )   
 
-  return html;
+  return elem;
  
 }
 
-repl.prototype.appendResult = function(result) {
+log.prototype.createResultElem = function(result) {
 
-  const elem = this.createResultElem(result);
-  this.view.insertBefore(elem, this.currentArea);
-
-}
-
-repl.prototype.createResultElem = function(logText) {
-
-  const html = h(
+  const elem = h(
     "div.log",
     {style: {"width": this.width}},
-    h("div.logPrompt",
+    h("div.resultPrompt",
       config.resultPrompt,
       {style: {"color": "black",
                "background-color": "white",
@@ -303,20 +371,72 @@ repl.prototype.createResultElem = function(logText) {
                "vertical-align": "top",
                "margin-right": "8px",
                "font-family": "monospace"}}),
-     h("div.logText",
-       logText,
+     h("div.resultText",
+       result,
        {style: {"color": "black",
                 // "float": "right",
                 "display": "inline-block",
                 "vertical-align": "top",
                 "font-family": "monospace"}})
-    )   
+  )   
 
-  return html;
+  return elem;
+ 
+}
+
+log.prototype.createOutputElem = function(content) {
+
+  const elem = h(
+    "div.log",
+    {style: {"width": this.width}},
+     h("div.output",
+       content,
+       {style: {"color": "black",
+                "width": this.width,
+                "display": "inline-block",
+                "vertical-align": "top",
+                "font-family": "monospace"}})
+  )   
+
+  return elem;
  
 }
 
 } // namespace boundary
+/*
+ * @aurthor Daisuke Homma
+ */
+
+{ // namespace boundary
+
+const sandbox = {};
+
+global.sandbox = sandbox;
+
+sandbox.init = repl => {
+
+  repl.sandbox.console = new console(repl); 
+
+}
+
+// sandbox console
+
+const console = function(repl) {
+
+  this.repl = repl;
+
+};
+
+console.prototype.log = function(content) {
+
+  const text = "" + content;
+
+  this.repl.currentLog.output(text);
+
+}
+
+} // namespace boundary
+
 /*
  * @aurthor Daisuke Homma
  */
