@@ -12,8 +12,8 @@ const log = function(repl) {
   this.width = repl.width;
 
   this.codeElem = null;
+  this.outputElem = [];
   this.resultElem = null;
-  this.outputElem = null;
 
 }
 
@@ -24,8 +24,8 @@ log.prototype.display = function() {
   const elem = h(
     "div.log",
     this.codeElem,
-    this.resultElem,
-    this.outputElem
+    this.outputElem,
+    this.resultElem
   )
     
   this.repl.logArea.appendChild(elem);
@@ -38,15 +38,15 @@ log.prototype.code = function(code) {
 
 }
 
-log.prototype.result = function(result) {
+log.prototype.output = function(output) {
 
-  this.resultElem = this.createResultElem(result);
+  this.outputElem.push(this.createOutputElem(output));
 
 }
 
-log.prototype.output = function(output) {
+log.prototype.result = function(result) {
 
-  this.outputElem = this.createOutputElem(output);
+  this.resultElem = this.createResultElem(result);
 
 }
 
@@ -77,6 +77,24 @@ log.prototype.createCodeElem = function(code) {
  
 }
 
+log.prototype.createOutputElem = function(content) {
+
+  const elem = h(
+    "div.log",
+    {style: {"width": this.width}},
+     h("div.output",
+       content,
+       {style: {"color": "black",
+                "width": this.width,
+                "display": "inline-block",
+                "vertical-align": "top",
+                "font-family": "monospace"}})
+  )   
+
+  return elem;
+ 
+}
+
 log.prototype.createResultElem = function(result) {
 
   const elem = h(
@@ -95,24 +113,6 @@ log.prototype.createResultElem = function(result) {
        result,
        {style: {"color": "black",
                 // "float": "right",
-                "display": "inline-block",
-                "vertical-align": "top",
-                "font-family": "monospace"}})
-  )   
-
-  return elem;
- 
-}
-
-log.prototype.createOutputElem = function(content) {
-
-  const elem = h(
-    "div.log",
-    {style: {"width": this.width}},
-     h("div.output",
-       content,
-       {style: {"color": "black",
-                "width": this.width,
                 "display": "inline-block",
                 "vertical-align": "top",
                 "font-family": "monospace"}})
