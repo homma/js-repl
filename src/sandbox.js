@@ -1,5 +1,5 @@
 /*
- * @aurthor Daisuke Homma
+ * @author Daisuke Homma
  */
 
 { // namespace boundary

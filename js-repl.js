@@ -11,7 +11,7 @@ config.prompt = ">";
 config.resultPrompt = "=>";
 
 /*
- * @aurthor Daisuke Homma
+ * @author Daisuke Homma
  */
 
 { // namespace boundary
@@ -114,7 +114,7 @@ const handleArgs = (elem, args) => {
 
 } // namespace boundary
 /*
- * @aurthor Daisuke Homma
+ * @author Daisuke Homma
  */
 
 { // namespace boundary
@@ -241,7 +241,7 @@ repl.prototype.evalCode = function(code) {
 
 } // namespace boundary
 /*
- * @aurthor Daisuke Homma
+ * @author Daisuke Homma
  */
 
 { // namespace boundary
@@ -313,7 +313,7 @@ repl.prototype.handleIllegalCodeError = function() {
 
 } // namespace boundary
 /*
- * @aurthor Daisuke Homma
+ * @author Daisuke Homma
  */
 
 { // namespace boundary
@@ -383,7 +383,7 @@ repl.prototype.handleEnterKey = function() {
 
 } // namespace boundary
 /*
- * @aurthor Daisuke Homma
+ * @author Daisuke Homma
  */
 
 { // namespace boundary
@@ -508,7 +508,7 @@ log.prototype.createResultElem = function(result) {
 
 } // namespace boundary
 /*
- * @aurthor Daisuke Homma
+ * @author Daisuke Homma
  */
 
 { // namespace boundary
@@ -542,7 +542,7 @@ console.prototype.log = function(content) {
 } // namespace boundary
 
 /*
- * @aurthor Daisuke Homma
+ * @author Daisuke Homma
  */
 
 { // namespace boundary
