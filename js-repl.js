@@ -287,7 +287,7 @@ repl.prototype.clearScreen = function() {
   // this.view.scrollTop = this.view.scrollHeight;
   this.view.scrollTop = 100;
 
-  // if(jsrepl.config.debug) {
+  if(jsrepl.config.debug) {
     console.log("clear screen");
     console.log(this.height);
     console.log(this.view.clientHeight);
@@ -297,7 +297,7 @@ repl.prototype.clearScreen = function() {
     console.log(this.editArea.clientHeight);
     console.log(this.editArea.offsetHeight);
     console.log(this.paddingArea.clientHeight);
-  // }
+  }
 
 }
 
