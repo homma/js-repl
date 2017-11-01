@@ -173,7 +173,8 @@ repl.prototype.createView = function() {
     {style: {"width": this.width,
              "height": this.height,
              "overflow-x": "visible",
-             "overflow-y": "auto"}},
+             "overflow-y": "auto"},
+     ontouchstart: e => this.onViewTouchStart(e)},
     h("div#logArea",
       {style: {"width": this.width}}),
     h("div#currentArea",
@@ -195,7 +196,8 @@ repl.prototype.createView = function() {
          onkeypress: e => this.onEditAreaKeyPress(e),
          onkeydown: e => this.onEditAreaKeyDown(e)
         })),
-    h("div#paddingArea"),
+    h("div#paddingArea",
+      {style: {"display": "block"}}),
     h("iframe#sandboxFrame",
       {style: {display: "none"}})
     )   
@@ -280,8 +282,22 @@ repl.prototype.resetCaret = function() {
 
 repl.prototype.clearScreen = function() {
 
-  console.log("clear screen");
-  // to be implemented
+  const h = this.height - this.editArea.offsetHeight;
+  this.paddingArea.style.height = h + "px";
+  // this.view.scrollTop = this.view.scrollHeight;
+  this.view.scrollTop = 100;
+
+  // if(jsrepl.config.debug) {
+    console.log("clear screen");
+    console.log(this.height);
+    console.log(this.view.clientHeight);
+    console.log(this.view.offsetHeight);
+    console.log(this.view.scrollHeight);
+    console.log(this.view.scrollTop);
+    console.log(this.editArea.clientHeight);
+    console.log(this.editArea.offsetHeight);
+    console.log(this.paddingArea.clientHeight);
+  // }
 
 }
 
@@ -323,6 +339,12 @@ repl.prototype.handleIllegalCodeError = function() {
 { // namespace boundary
 
 const repl = jsrepl.repl;
+
+repl.prototype.onViewTouchStart = function(e) {
+
+  this.editArea.focus();
+
+}
 
 repl.prototype.onEditAreaKeyDown = function(e) {
 

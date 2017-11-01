@@ -54,7 +54,8 @@ repl.prototype.createView = function() {
     {style: {"width": this.width,
              "height": this.height,
              "overflow-x": "visible",
-             "overflow-y": "auto"}},
+             "overflow-y": "auto"},
+     ontouchstart: e => this.onViewTouchStart(e)},
     h("div#logArea",
       {style: {"width": this.width}}),
     h("div#currentArea",
@@ -76,7 +77,8 @@ repl.prototype.createView = function() {
          onkeypress: e => this.onEditAreaKeyPress(e),
          onkeydown: e => this.onEditAreaKeyDown(e)
         })),
-    h("div#paddingArea"),
+    h("div#paddingArea",
+      {style: {"display": "block"}}),
     h("iframe#sandboxFrame",
       {style: {display: "none"}})
     )   

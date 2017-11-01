@@ -6,6 +6,12 @@
 
 const repl = jsrepl.repl;
 
+repl.prototype.onViewTouchStart = function(e) {
+
+  this.editArea.focus();
+
+}
+
 repl.prototype.onEditAreaKeyDown = function(e) {
 
   if(jsrepl.config.debug) {

@@ -34,8 +34,22 @@ repl.prototype.resetCaret = function() {
 
 repl.prototype.clearScreen = function() {
 
-  console.log("clear screen");
-  // to be implemented
+  const h = this.height - this.editArea.offsetHeight;
+  this.paddingArea.style.height = h + "px";
+  // this.view.scrollTop = this.view.scrollHeight;
+  this.view.scrollTop = 100;
+
+  if(jsrepl.config.debug) {
+    console.log("clear screen");
+    console.log(this.height);
+    console.log(this.view.clientHeight);
+    console.log(this.view.offsetHeight);
+    console.log(this.view.scrollHeight);
+    console.log(this.view.scrollTop);
+    console.log(this.editArea.clientHeight);
+    console.log(this.editArea.offsetHeight);
+    console.log(this.paddingArea.clientHeight);
+  }
 
 }
 
