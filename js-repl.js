@@ -155,7 +155,7 @@ history.prototype.push = function(code) {
     return
   }
 
-  jsrepl.debug(0, "history: code ", code);
+  jsrepl.debug(0, "history: push", this.current, code);
 
   this.history.push(code);
   this.current = this.history.length - 1;
@@ -164,7 +164,7 @@ history.prototype.push = function(code) {
 
 history.prototype.previous = function() {
 
-  jsrepl.debug(0, "history: previous.");
+  jsrepl.debug(0, "history: prev.", this.current);
 
   if(this.current < 0) {
 
@@ -173,8 +173,11 @@ history.prototype.previous = function() {
   }
 
   const ret = this.history[this.current];
-  this.current--;
-  jsrepl.debug(0, "history: at ", this.current, this.history[this.current]);
+  jsrepl.debug(0, "history: prev", this.current, this.history[this.current]);
+
+  if(this.current != 0) {
+    this.current--;
+  }
 
   return ret;
 
@@ -182,7 +185,7 @@ history.prototype.previous = function() {
 
 history.prototype.next = function() {
 
-  jsrepl.debug(0, "history: next.");
+  jsrepl.debug(0, "history: next", this.current);
 
   if(this.current == this.history.length - 1) {
 
@@ -191,7 +194,7 @@ history.prototype.next = function() {
   }
 
   this.current++;
-  jsrepl.debug(0, "history: at ", this.current, this.history[this.current]);
+  jsrepl.debug(0, "history: next", this.current, this.history[this.current]);
 
   return this.history[this.current];
 
@@ -313,6 +316,7 @@ repl.prototype.processCode = function(code) {
   log.display();
 
   this.resetEditArea();
+  jsrepl.debug(0, this.editArea.innerHTML);
 
 }
 
@@ -356,9 +360,11 @@ repl.prototype.resetEditArea = function() {
 repl.prototype.setEditAreaPrevious = function() {
 
     const code = this.history.previous();
-    if(typeof code != null) {
+    if(code != null) {
 
+      jsrepl.debug(0, code);
       this.editArea.innerHTML = code;
+      this.setCaretAtEnd();
 
     }
 }
@@ -366,31 +372,35 @@ repl.prototype.setEditAreaPrevious = function() {
 repl.prototype.setEditAreaNext = function() {
 
     const code = this.history.next();
-    if(typeof code != null) {
+    this.editArea.innerHTML = code;
 
-      this.editArea.innerHTML = code;
+}
 
-    }
+repl.prototype.setCaret = function(pos) {
+
+  const elem = this.editArea;
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.setStart(elem.firstChild, pos);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+
 }
 
 repl.prototype.resetCaret = function() {
 
   const pos = 0;
 
-  const range = document.createRange();
-  // const node = this.editArea.firstChild;
-  // const node = this.editArea.item(0);
-  const node = this.editArea;
-  // range.setStart(node, pos);
-  // range.setEnd(node, pos);
-  range.selectNode(node);
-  range.collapse(true);
+  this.setCaret(pos);
 
-  // const sel = window.getSelection();
-  // sel.removeAllRanges();
-  // sel.addRange(range);
+}
 
-  jsrepl.debug(0, this.editArea.innerText);
+repl.prototype.setCaretAtEnd = function() {
+
+  const pos = this.editArea.innerHTML.length;
+
+  this.setCaret(pos);
 
 }
 
@@ -483,11 +493,13 @@ repl.prototype.onEditAreaKeyDown = function(e) {
 
       // History back
       this.setEditAreaPrevious();
+      e.preventDefault();
 
     } else if ( e.key == "n" ) {
 
       // History forward
       this.setEditAreaNext();
+      e.preventDefault();
 
     }
 
@@ -497,11 +509,13 @@ repl.prototype.onEditAreaKeyDown = function(e) {
 
       // History back
       this.setEditAreaPrevious();
+      e.preventDefault();
 
     } else if ( e.key == "ArrowDown" ) {
 
       // History forward
       this.setEditAreaNext();
+      e.preventDefault();
 
     }
 
@@ -517,7 +531,7 @@ repl.prototype.onEditAreaKeyPress = function(e) {
 
   if( e.key == "Enter" ) {
 
-    this.handleEnterKey();
+    this.handleEnterKey(e);
 
   } else if( e.key == "c" ) {
 
@@ -529,17 +543,17 @@ repl.prototype.onEditAreaKeyPress = function(e) {
 
 }
 
-repl.prototype.handleEnterKey = function() {
+repl.prototype.handleEnterKey = function(event) {
 
   const code = this.editArea.innerText;
 
   try {
     esprima.parseScript(code);
-  } catch(e) {
+  } catch(error) {
 
     /* will not handle error. just ignoring it for now.
-    if(e.description == "Unexpected token ILLEGAL") {
-      console.log(e);
+    if(error.description == "Unexpected token ILLEGAL") {
+      console.log(error);
       this.handleIllegalCodeError();
     }
     */
@@ -547,6 +561,7 @@ repl.prototype.handleEnterKey = function() {
     return;
   }
 
+  event.preventDefault();
   this.processCode(code);
 
 }

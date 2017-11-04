@@ -19,9 +19,11 @@ repl.prototype.resetEditArea = function() {
 repl.prototype.setEditAreaPrevious = function() {
 
     const code = this.history.previous();
-    if(typeof code != null) {
+    if(code != null) {
 
+      jsrepl.debug(0, code);
       this.editArea.innerHTML = code;
+      this.setCaretAtEnd();
 
     }
 }
@@ -29,31 +31,35 @@ repl.prototype.setEditAreaPrevious = function() {
 repl.prototype.setEditAreaNext = function() {
 
     const code = this.history.next();
-    if(typeof code != null) {
+    this.editArea.innerHTML = code;
 
-      this.editArea.innerHTML = code;
+}
 
-    }
+repl.prototype.setCaret = function(pos) {
+
+  const elem = this.editArea;
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.setStart(elem.firstChild, pos);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+
 }
 
 repl.prototype.resetCaret = function() {
 
   const pos = 0;
 
-  const range = document.createRange();
-  // const node = this.editArea.firstChild;
-  // const node = this.editArea.item(0);
-  const node = this.editArea;
-  // range.setStart(node, pos);
-  // range.setEnd(node, pos);
-  range.selectNode(node);
-  range.collapse(true);
+  this.setCaret(pos);
 
-  // const sel = window.getSelection();
-  // sel.removeAllRanges();
-  // sel.addRange(range);
+}
 
-  jsrepl.debug(0, this.editArea.innerText);
+repl.prototype.setCaretAtEnd = function() {
+
+  const pos = this.editArea.innerHTML.length;
+
+  this.setCaret(pos);
 
 }
 

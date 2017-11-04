@@ -30,11 +30,13 @@ repl.prototype.onEditAreaKeyDown = function(e) {
 
       // History back
       this.setEditAreaPrevious();
+      e.preventDefault();
 
     } else if ( e.key == "n" ) {
 
       // History forward
       this.setEditAreaNext();
+      e.preventDefault();
 
     }
 
@@ -44,11 +46,13 @@ repl.prototype.onEditAreaKeyDown = function(e) {
 
       // History back
       this.setEditAreaPrevious();
+      e.preventDefault();
 
     } else if ( e.key == "ArrowDown" ) {
 
       // History forward
       this.setEditAreaNext();
+      e.preventDefault();
 
     }
 
@@ -64,7 +68,7 @@ repl.prototype.onEditAreaKeyPress = function(e) {
 
   if( e.key == "Enter" ) {
 
-    this.handleEnterKey();
+    this.handleEnterKey(e);
 
   } else if( e.key == "c" ) {
 
@@ -76,17 +80,17 @@ repl.prototype.onEditAreaKeyPress = function(e) {
 
 }
 
-repl.prototype.handleEnterKey = function() {
+repl.prototype.handleEnterKey = function(event) {
 
   const code = this.editArea.innerText;
 
   try {
     esprima.parseScript(code);
-  } catch(e) {
+  } catch(error) {
 
     /* will not handle error. just ignoring it for now.
-    if(e.description == "Unexpected token ILLEGAL") {
-      console.log(e);
+    if(error.description == "Unexpected token ILLEGAL") {
+      console.log(error);
       this.handleIllegalCodeError();
     }
     */
@@ -94,6 +98,7 @@ repl.prototype.handleEnterKey = function() {
     return;
   }
 
+  event.preventDefault();
   this.processCode(code);
 
 }

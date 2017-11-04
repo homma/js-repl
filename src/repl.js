@@ -113,6 +113,7 @@ repl.prototype.processCode = function(code) {
   log.display();
 
   this.resetEditArea();
+  jsrepl.debug(0, this.editArea.innerHTML);
 
 }
 

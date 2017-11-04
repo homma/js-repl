@@ -1,9 +1,6 @@
 
-# History
-- handle Ctrl-P, Ctrl-N, UpArrow, DownArrow
-- create an array and store codes.
-
 # Clearing Window
+- half finished
 - handle Ctrl-L
 - use paddingArea
 

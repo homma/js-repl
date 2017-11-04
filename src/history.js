@@ -21,7 +21,7 @@ history.prototype.push = function(code) {
     return
   }
 
-  jsrepl.debug(0, "history: code ", code);
+  jsrepl.debug(0, "history: push", this.current, code);
 
   this.history.push(code);
   this.current = this.history.length - 1;
@@ -30,7 +30,7 @@ history.prototype.push = function(code) {
 
 history.prototype.previous = function() {
 
-  jsrepl.debug(0, "history: previous.");
+  jsrepl.debug(0, "history: prev.", this.current);
 
   if(this.current < 0) {
 
@@ -39,8 +39,11 @@ history.prototype.previous = function() {
   }
 
   const ret = this.history[this.current];
-  this.current--;
-  jsrepl.debug(0, "history: at ", this.current, this.history[this.current]);
+  jsrepl.debug(0, "history: prev", this.current, this.history[this.current]);
+
+  if(this.current != 0) {
+    this.current--;
+  }
 
   return ret;
 
@@ -48,7 +51,7 @@ history.prototype.previous = function() {
 
 history.prototype.next = function() {
 
-  jsrepl.debug(0, "history: next.");
+  jsrepl.debug(0, "history: next", this.current);
 
   if(this.current == this.history.length - 1) {
 
@@ -57,7 +60,7 @@ history.prototype.next = function() {
   }
 
   this.current++;
-  jsrepl.debug(0, "history: at ", this.current, this.history[this.current]);
+  jsrepl.debug(0, "history: next", this.current, this.history[this.current]);
 
   return this.history[this.current];
 
