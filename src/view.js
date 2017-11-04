@@ -51,7 +51,8 @@ repl.prototype.resetCaret = function() {
 
   const pos = 0;
 
-  this.setCaret(pos);
+  // It seems this doesn't work somehow.
+  // this.setCaret(pos);
 
 }
 
