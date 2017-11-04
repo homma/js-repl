@@ -3,16 +3,16 @@
  */
 
 const jsrepl = {};
-jsrepl.config = {};
 
 { // namespace boundary
 
+jsrepl.config = {};
 const config = jsrepl.config;
 
 config.rootElementId = "js-repl";
 config.prompt = ">";
 config.resultPrompt = "=>";
 
-config.debug = true;
+config.debug = false;
 
 } // namespace boundary

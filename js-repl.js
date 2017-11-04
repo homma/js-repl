@@ -3,17 +3,17 @@
  */
 
 const jsrepl = {};
-jsrepl.config = {};
 
 { // namespace boundary
 
+jsrepl.config = {};
 const config = jsrepl.config;
 
 config.rootElementId = "js-repl";
 config.prompt = ">";
 config.resultPrompt = "=>";
 
-config.debug = true;
+config.debug = false;
 
 } // namespace boundary
 /*
@@ -123,13 +123,15 @@ const handleArgs = (elem, args) => {
 
 { // namespace boundary
 
-const debug = function(flag, ...str) {
-  if(flag) {
+const debug = function(str) {
     console.log(str);
-  }
 }
 
+// no debug
+const nebug = function() {}
+
 jsrepl.debug = debug;
+jsrepl.nebug = nebug;
 
 } // namespace boundary
 /*
@@ -149,13 +151,13 @@ jsrepl.history = history;
 
 history.prototype.push = function(code) {
 
-  jsrepl.debug(0, "history: push code.");
+  jsrepl.nebug("history: push code.");
 
   if( (code == null) || (code == "") || (typeof code === "undefined") ) {
     return
   }
 
-  jsrepl.debug(0, "history: push", this.current, code);
+  jsrepl.nebug("history: push", this.current, code);
 
   this.history.push(code);
   this.current = this.history.length - 1;
@@ -164,7 +166,7 @@ history.prototype.push = function(code) {
 
 history.prototype.previous = function() {
 
-  jsrepl.debug(0, "history: prev.", this.current);
+  jsrepl.nebug("history: prev.", this.current);
 
   if(this.current < 0) {
 
@@ -173,7 +175,7 @@ history.prototype.previous = function() {
   }
 
   const ret = this.history[this.current];
-  jsrepl.debug(0, "history: prev", this.current, this.history[this.current]);
+  jsrepl.nebug("history: prev", this.current, this.history[this.current]);
 
   if(this.current != 0) {
     this.current--;
@@ -185,7 +187,7 @@ history.prototype.previous = function() {
 
 history.prototype.next = function() {
 
-  jsrepl.debug(0, "history: next", this.current);
+  jsrepl.nebug("history: next", this.current);
 
   if(this.current == this.history.length - 1) {
 
@@ -194,7 +196,7 @@ history.prototype.next = function() {
   }
 
   this.current++;
-  jsrepl.debug(0, "history: next", this.current, this.history[this.current]);
+  jsrepl.nebug("history: next", this.current, this.history[this.current]);
 
   return this.history[this.current];
 
@@ -316,7 +318,7 @@ repl.prototype.processCode = function(code) {
   log.display();
 
   this.resetEditArea();
-  jsrepl.debug(0, this.editArea.innerHTML);
+  jsrepl.nebug(this.editArea.innerHTML);
 
 }
 
@@ -353,7 +355,7 @@ repl.prototype.resetEditArea = function() {
   this.editArea.innerHTML = "";
   // this.editArea.textContent = "";
 
-  jsrepl.debug(0, this.editArea.innerText);
+  jsrepl.nebug(this.editArea.innerText);
 
 }
 
@@ -362,7 +364,7 @@ repl.prototype.setEditAreaPrevious = function() {
     const code = this.history.previous();
     if(code != null) {
 
-      jsrepl.debug(0, code);
+      jsrepl.nebug(code);
       this.editArea.innerHTML = code;
       this.setCaretAtEnd();
 
@@ -417,15 +419,15 @@ repl.prototype.clearScreen = function() {
 
   // this.editArea.scrollIntoView(true);
 
-  jsrepl.debug(0, "clear screen");
-  jsrepl.debug(0, this.height);
-  jsrepl.debug(0, this.view.clientHeight);
-  jsrepl.debug(0, this.view.offsetHeight);
-  jsrepl.debug(0, this.view.scrollHeight);
-  jsrepl.debug(0, this.view.scrollTop);
-  jsrepl.debug(0, this.editArea.clientHeight);
-  jsrepl.debug(0, this.editArea.offsetHeight);
-  jsrepl.debug(0, this.paddingArea.clientHeight);
+  jsrepl.nebug("clear screen");
+  jsrepl.nebug(this.height);
+  jsrepl.nebug(this.view.clientHeight);
+  jsrepl.nebug(this.view.offsetHeight);
+  jsrepl.nebug(this.view.scrollHeight);
+  jsrepl.nebug(this.view.scrollTop);
+  jsrepl.nebug(this.editArea.clientHeight);
+  jsrepl.nebug(this.editArea.offsetHeight);
+  jsrepl.nebug(this.paddingArea.clientHeight);
 
 }
 
@@ -478,9 +480,9 @@ repl.prototype.onViewTouchStart = function(e) {
 
 repl.prototype.onEditAreaKeyDown = function(e) {
 
-  jsrepl.debug(0, e);
-  jsrepl.debug(0, e.keyCode);
-  jsrepl.debug(0, e.key);
+  jsrepl.nebug(e);
+  jsrepl.nebug(e.keyCode);
+  jsrepl.nebug(e.key);
 
 
   // when ctrl key is pressed.
@@ -526,9 +528,9 @@ repl.prototype.onEditAreaKeyDown = function(e) {
 
 repl.prototype.onEditAreaKeyPress = function(e) {
 
-  jsrepl.debug(0, e);
-  jsrepl.debug(0, e.keyCode);
-  jsrepl.debug(0, e.key);
+  jsrepl.nebug(e);
+  jsrepl.nebug(e.keyCode);
+  jsrepl.nebug(e.key);
 
   if( e.key == "Enter" ) {
 

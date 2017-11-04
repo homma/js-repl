@@ -15,13 +15,13 @@ jsrepl.history = history;
 
 history.prototype.push = function(code) {
 
-  jsrepl.debug(0, "history: push code.");
+  jsrepl.nebug("history: push code.");
 
   if( (code == null) || (code == "") || (typeof code === "undefined") ) {
     return
   }
 
-  jsrepl.debug(0, "history: push", this.current, code);
+  jsrepl.nebug("history: push", this.current, code);
 
   this.history.push(code);
   this.current = this.history.length - 1;
@@ -30,7 +30,7 @@ history.prototype.push = function(code) {
 
 history.prototype.previous = function() {
 
-  jsrepl.debug(0, "history: prev.", this.current);
+  jsrepl.nebug("history: prev.", this.current);
 
   if(this.current < 0) {
 
@@ -39,7 +39,7 @@ history.prototype.previous = function() {
   }
 
   const ret = this.history[this.current];
-  jsrepl.debug(0, "history: prev", this.current, this.history[this.current]);
+  jsrepl.nebug("history: prev", this.current, this.history[this.current]);
 
   if(this.current != 0) {
     this.current--;
@@ -51,7 +51,7 @@ history.prototype.previous = function() {
 
 history.prototype.next = function() {
 
-  jsrepl.debug(0, "history: next", this.current);
+  jsrepl.nebug("history: next", this.current);
 
   if(this.current == this.history.length - 1) {
 
@@ -60,7 +60,7 @@ history.prototype.next = function() {
   }
 
   this.current++;
-  jsrepl.debug(0, "history: next", this.current, this.history[this.current]);
+  jsrepl.nebug("history: next", this.current, this.history[this.current]);
 
   return this.history[this.current];
 

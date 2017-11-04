@@ -4,12 +4,14 @@
 
 { // namespace boundary
 
-const debug = function(flag, ...str) {
-  if(flag) {
+const debug = function(str) {
     console.log(str);
-  }
 }
 
+// no debug
+const nebug = function() {}
+
 jsrepl.debug = debug;
+jsrepl.nebug = nebug;
 
 } // namespace boundary
