@@ -47,6 +47,7 @@ repl.prototype.init = function() {
   this.createSandbox();
 
   this.editArea.focus();
+  // this.resetEditArea();
 
 }
 

@@ -14,9 +14,9 @@ repl.prototype.onViewTouchStart = function(e) {
 
 repl.prototype.onEditAreaKeyDown = function(e) {
 
-  jsrepl.debug(e);
-  jsrepl.debug(e.keyCode);
-  jsrepl.debug(e.key);
+  jsrepl.debug(0, e);
+  jsrepl.debug(0, e.keyCode);
+  jsrepl.debug(0, e.key);
 
 
   // when ctrl key is pressed.
@@ -58,9 +58,9 @@ repl.prototype.onEditAreaKeyDown = function(e) {
 
 repl.prototype.onEditAreaKeyPress = function(e) {
 
-  jsrepl.debug(e);
-  jsrepl.debug(e.keyCode);
-  jsrepl.debug(e.key);
+  jsrepl.debug(0, e);
+  jsrepl.debug(0, e.keyCode);
+  jsrepl.debug(0, e.key);
 
   if( e.key == "Enter" ) {
 

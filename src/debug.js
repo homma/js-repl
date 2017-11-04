@@ -4,8 +4,8 @@
 
 { // namespace boundary
 
-const debug = function(str) {
-  if(jsrepl.config.debug) {
+const debug = function(flag, ...str) {
+  if(flag) {
     console.log(str);
   }
 }

@@ -8,8 +8,11 @@ const repl = jsrepl.repl;
 
 repl.prototype.resetEditArea = function() {
 
+  this.resetCaret();
   this.editArea.innerHTML = "";
-  // this.resetCaret();
+  // this.editArea.textContent = "";
+
+  jsrepl.debug(0, this.editArea.innerText);
 
 }
 
@@ -50,6 +53,8 @@ repl.prototype.resetCaret = function() {
   // sel.removeAllRanges();
   // sel.addRange(range);
 
+  jsrepl.debug(0, this.editArea.innerText);
+
 }
 
 repl.prototype.clearScreen = function() {
@@ -64,15 +69,15 @@ repl.prototype.clearScreen = function() {
 
   // this.editArea.scrollIntoView(true);
 
-  jsrepl.debug("clear screen");
-  jsrepl.debug(this.height);
-  jsrepl.debug(this.view.clientHeight);
-  jsrepl.debug(this.view.offsetHeight);
-  jsrepl.debug(this.view.scrollHeight);
-  jsrepl.debug(this.view.scrollTop);
-  jsrepl.debug(this.editArea.clientHeight);
-  jsrepl.debug(this.editArea.offsetHeight);
-  jsrepl.debug(this.paddingArea.clientHeight);
+  jsrepl.debug(0, "clear screen");
+  jsrepl.debug(0, this.height);
+  jsrepl.debug(0, this.view.clientHeight);
+  jsrepl.debug(0, this.view.offsetHeight);
+  jsrepl.debug(0, this.view.scrollHeight);
+  jsrepl.debug(0, this.view.scrollTop);
+  jsrepl.debug(0, this.editArea.clientHeight);
+  jsrepl.debug(0, this.editArea.offsetHeight);
+  jsrepl.debug(0, this.paddingArea.clientHeight);
 
 }
 
