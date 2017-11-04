@@ -13,7 +13,7 @@ config.rootElementId = "js-repl";
 config.prompt = ">";
 config.resultPrompt = "=>";
 
-config.debug = false;
+config.debug = true;
 
 } // namespace boundary
 /*
@@ -123,6 +123,80 @@ const handleArgs = (elem, args) => {
 
 { // namespace boundary
 
+const debug = function(str) {
+  if(jsrepl.config.debug) {
+    console.log(str);
+  }
+}
+
+jsrepl.debug = debug;
+
+} // namespace boundary
+/*
+ * @author Daisuke Homma
+ */
+
+{ // namespace boundary
+
+const history = function() {
+
+  this.history = [];
+  this.current = 0;
+
+}
+
+jsrepl.history = history;
+
+history.prototype.push = function(code) {
+
+  jsrepl.debug("history: push code ", code);
+
+  this.history.push(code);
+  this.current = this.history.length;
+
+}
+
+history.prototype.previous = function() {
+
+  jsrepl.debug("history: previous.");
+
+  if(this.current == 0) {
+
+    return null; 
+
+  }
+
+  this.current--;
+  jsrepl.debug(this.history[this.current]);
+
+  return this.history[this.current];
+
+}
+
+history.prototype.next = function() {
+
+  jsrepl.debug("history: next.");
+
+  if(this.current == this.history.length) {
+
+    return null; 
+
+  }
+
+  this.current++;
+  jsrepl.debug(this.history[this.current]);
+
+  return this.history[this.current];
+
+}
+
+} // namespace boundary
+/*
+ * @author Daisuke Homma
+ */
+
+{ // namespace boundary
+
 const h = jsrepl.hyperscript;
 
 const repl = function(root) {
@@ -140,6 +214,8 @@ const repl = function(root) {
   this.sandbox = null;
 
   this.currentLog = null;
+
+  this.history = null;
 
   this.init();
 
@@ -159,6 +235,8 @@ repl.prototype.init = function() {
   this.paddingArea = document.getElementById("paddingArea");
   this.sandbox = document.getElementById("sandboxFrame").contentWindow;
 
+  this.history = new jsrepl.history();
+
   this.createSandbox();
 
   this.editArea.focus();
@@ -172,8 +250,9 @@ repl.prototype.createView = function() {
     "div#view",
     {style: {"width": this.width,
              "height": this.height,
-             "overflow-x": "visible",
-             "overflow-y": "auto"},
+             // "overflow-x": "visible",
+             // "overflow-y": "auto"},
+             },
      ontouchstart: e => this.onViewTouchStart(e)},
     h("div#logArea",
       {style: {"width": this.width}}),
@@ -219,6 +298,8 @@ repl.prototype.processCode = function(code) {
 
   const result = this.evalCode(code);
 
+  this.history.push(code);
+
   log.code(code);
   log.result(result);
   log.display();
@@ -261,6 +342,26 @@ repl.prototype.resetEditArea = function() {
 
 }
 
+repl.prototype.setEditAreaPrevious = function() {
+
+    const code = this.history.previous();
+    if(typeof code != null) {
+
+      this.editArea.innerHTML = code;
+
+    }
+}
+
+repl.prototype.setEditAreaNext = function() {
+
+    const code = this.history.next();
+    if(typeof code != null) {
+
+      this.editArea.innerHTML = code;
+
+    }
+}
+
 repl.prototype.resetCaret = function() {
 
   const pos = 0;
@@ -284,20 +385,23 @@ repl.prototype.clearScreen = function() {
 
   const h = this.height - this.editArea.offsetHeight;
   this.paddingArea.style.height = h + "px";
-  // this.view.scrollTop = this.view.scrollHeight;
-  this.view.scrollTop = 100;
+  document.body.scrollTop = 1000;
 
-  if(jsrepl.config.debug) {
-    console.log("clear screen");
-    console.log(this.height);
-    console.log(this.view.clientHeight);
-    console.log(this.view.offsetHeight);
-    console.log(this.view.scrollHeight);
-    console.log(this.view.scrollTop);
-    console.log(this.editArea.clientHeight);
-    console.log(this.editArea.offsetHeight);
-    console.log(this.paddingArea.clientHeight);
-  }
+  // this.view.scrollTop = this.view.scrollHeight;
+  // this.view.scrollTop = 100;
+  // this.paddingArea.scrollIntoView();
+
+  // this.editArea.scrollIntoView(true);
+
+  jsrepl.debug("clear screen");
+  jsrepl.debug(this.height);
+  jsrepl.debug(this.view.clientHeight);
+  jsrepl.debug(this.view.offsetHeight);
+  jsrepl.debug(this.view.scrollHeight);
+  jsrepl.debug(this.view.scrollTop);
+  jsrepl.debug(this.editArea.clientHeight);
+  jsrepl.debug(this.editArea.offsetHeight);
+  jsrepl.debug(this.paddingArea.clientHeight);
 
 }
 
@@ -307,6 +411,8 @@ repl.prototype.handleCancel = function() {
   this.currentLog = log;
 
   const code = this.editArea.innerText;
+
+  this.history.push(code);
   log.code(code);
 
   log.display();
@@ -348,28 +454,53 @@ repl.prototype.onViewTouchStart = function(e) {
 
 repl.prototype.onEditAreaKeyDown = function(e) {
 
-  if(jsrepl.config.debug) {
-    console.log(e);
-    console.log(e.keyCode);
-    console.log(e.key);
-  }
+  jsrepl.debug(e);
+  jsrepl.debug(e.keyCode);
+  jsrepl.debug(e.key);
 
-  if( e.key == "l" ) {
 
-    if(e.ctrlKey) {
+  // when ctrl key is pressed.
+  if(e.ctrlKey) {
+
+    if( e.key == "l" ) {
+
       this.clearScreen();
+
+    } else if ( e.key == "p" ) {
+
+      // History back
+      this.setEditAreaPrevious();
+
+    } else if ( e.key == "n" ) {
+
+      // History forward
+      this.setEditAreaNext();
+
+    }
+
+  } else {
+
+    if ( e.key == "ArrowUp" ) {
+
+      // History back
+      this.setEditAreaPrevious();
+
+    } else if ( e.key == "ArrowDown" ) {
+
+      // History forward
+      this.setEditAreaNext();
+
     }
 
   }
+
 }
 
 repl.prototype.onEditAreaKeyPress = function(e) {
 
-  if(jsrepl.config.debug) {
-    console.log(e);
-    console.log(e.keyCode);
-    console.log(e.key);
-  }
+  jsrepl.debug(e);
+  jsrepl.debug(e.keyCode);
+  jsrepl.debug(e.key);
 
   if( e.key == "Enter" ) {
 

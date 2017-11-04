@@ -14,28 +14,53 @@ repl.prototype.onViewTouchStart = function(e) {
 
 repl.prototype.onEditAreaKeyDown = function(e) {
 
-  if(jsrepl.config.debug) {
-    console.log(e);
-    console.log(e.keyCode);
-    console.log(e.key);
-  }
+  jsrepl.debug(e);
+  jsrepl.debug(e.keyCode);
+  jsrepl.debug(e.key);
 
-  if( e.key == "l" ) {
 
-    if(e.ctrlKey) {
+  // when ctrl key is pressed.
+  if(e.ctrlKey) {
+
+    if( e.key == "l" ) {
+
       this.clearScreen();
+
+    } else if ( e.key == "p" ) {
+
+      // History back
+      this.setEditAreaPrevious();
+
+    } else if ( e.key == "n" ) {
+
+      // History forward
+      this.setEditAreaNext();
+
+    }
+
+  } else {
+
+    if ( e.key == "ArrowUp" ) {
+
+      // History back
+      this.setEditAreaPrevious();
+
+    } else if ( e.key == "ArrowDown" ) {
+
+      // History forward
+      this.setEditAreaNext();
+
     }
 
   }
+
 }
 
 repl.prototype.onEditAreaKeyPress = function(e) {
 
-  if(jsrepl.config.debug) {
-    console.log(e);
-    console.log(e.keyCode);
-    console.log(e.key);
-  }
+  jsrepl.debug(e);
+  jsrepl.debug(e.keyCode);
+  jsrepl.debug(e.key);
 
   if( e.key == "Enter" ) {
 

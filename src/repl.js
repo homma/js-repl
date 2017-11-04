@@ -22,6 +22,8 @@ const repl = function(root) {
 
   this.currentLog = null;
 
+  this.history = null;
+
   this.init();
 
 };
@@ -40,6 +42,8 @@ repl.prototype.init = function() {
   this.paddingArea = document.getElementById("paddingArea");
   this.sandbox = document.getElementById("sandboxFrame").contentWindow;
 
+  this.history = new jsrepl.history();
+
   this.createSandbox();
 
   this.editArea.focus();
@@ -53,8 +57,9 @@ repl.prototype.createView = function() {
     "div#view",
     {style: {"width": this.width,
              "height": this.height,
-             "overflow-x": "visible",
-             "overflow-y": "auto"},
+             // "overflow-x": "visible",
+             // "overflow-y": "auto"},
+             },
      ontouchstart: e => this.onViewTouchStart(e)},
     h("div#logArea",
       {style: {"width": this.width}}),
@@ -99,6 +104,8 @@ repl.prototype.processCode = function(code) {
   this.currentLog = log;
 
   const result = this.evalCode(code);
+
+  this.history.push(code);
 
   log.code(code);
   log.result(result);

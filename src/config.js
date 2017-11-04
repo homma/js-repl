@@ -13,6 +13,6 @@ config.rootElementId = "js-repl";
 config.prompt = ">";
 config.resultPrompt = "=>";
 
-config.debug = false;
+config.debug = true;
 
 } // namespace boundary

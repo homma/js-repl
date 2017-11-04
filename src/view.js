@@ -13,6 +13,26 @@ repl.prototype.resetEditArea = function() {
 
 }
 
+repl.prototype.setEditAreaPrevious = function() {
+
+    const code = this.history.previous();
+    if(typeof code != null) {
+
+      this.editArea.innerHTML = code;
+
+    }
+}
+
+repl.prototype.setEditAreaNext = function() {
+
+    const code = this.history.next();
+    if(typeof code != null) {
+
+      this.editArea.innerHTML = code;
+
+    }
+}
+
 repl.prototype.resetCaret = function() {
 
   const pos = 0;
@@ -36,20 +56,23 @@ repl.prototype.clearScreen = function() {
 
   const h = this.height - this.editArea.offsetHeight;
   this.paddingArea.style.height = h + "px";
-  // this.view.scrollTop = this.view.scrollHeight;
-  this.view.scrollTop = 100;
+  document.body.scrollTop = 1000;
 
-  if(jsrepl.config.debug) {
-    console.log("clear screen");
-    console.log(this.height);
-    console.log(this.view.clientHeight);
-    console.log(this.view.offsetHeight);
-    console.log(this.view.scrollHeight);
-    console.log(this.view.scrollTop);
-    console.log(this.editArea.clientHeight);
-    console.log(this.editArea.offsetHeight);
-    console.log(this.paddingArea.clientHeight);
-  }
+  // this.view.scrollTop = this.view.scrollHeight;
+  // this.view.scrollTop = 100;
+  // this.paddingArea.scrollIntoView();
+
+  // this.editArea.scrollIntoView(true);
+
+  jsrepl.debug("clear screen");
+  jsrepl.debug(this.height);
+  jsrepl.debug(this.view.clientHeight);
+  jsrepl.debug(this.view.offsetHeight);
+  jsrepl.debug(this.view.scrollHeight);
+  jsrepl.debug(this.view.scrollTop);
+  jsrepl.debug(this.editArea.clientHeight);
+  jsrepl.debug(this.editArea.offsetHeight);
+  jsrepl.debug(this.paddingArea.clientHeight);
 
 }
 
@@ -59,6 +82,8 @@ repl.prototype.handleCancel = function() {
   this.currentLog = log;
 
   const code = this.editArea.innerText;
+
+  this.history.push(code);
   log.code(code);
 
   log.display();
