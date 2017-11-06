@@ -6,9 +6,23 @@ JavaScript REPL that works on web browsers.
 
 http://homma.github.io/app/js-repl/
 
-# Note
+# Usage Note
 
 - top level let and const does not save a value in the context. use var instead.
+
+- use load(url) function to import external library.
+
+````
+> load("https://code.jquery.com/jquery-3.2.1.min.js");
+> $("head").children()[0].src
+=> https://code.jquery.com/jquery-3.2.1.min.js
+````
+````
+> load("https://unpkg.com/esprima@~4.0/dist/esprima.js");
+> var res = esprima.parse("let foo = 'foo'");
+> res.body[0].type
+=> VariableDeclaration
+````
 
 # References
 
