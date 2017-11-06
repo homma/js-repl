@@ -8,9 +8,14 @@ http://homma.github.io/app/js-repl/
 
 # Usage Note
 
-- top level let and const does not save a value in the context. use var instead.
+## language
 
-- use load(url) function to import external library.
+Top level let and const does not save a value in the context.  
+Use var instead.
+
+## loading libraries
+
+Use load(url) function to import external library.
 
 ````
 > load("https://code.jquery.com/jquery-3.2.1.min.js");
@@ -20,8 +25,26 @@ http://homma.github.io/app/js-repl/
 ````
 > load("https://unpkg.com/esprima@~4.0/dist/esprima.js");
 > var res = esprima.parse("let foo = 'foo'");
-> res.body[0].type
-=> VariableDeclaration
+> JSON.stringify(res)
+=> {"type":"Program","body":[{"type":"VariableDeclaration","declarations":[{"type":"VariableDeclarator","id":{"type":"Identifier","name":"foo"},"init":{"type":"Literal","value":"foo","raw":"'foo'"}}],"kind":"let"}],"sourceType":"script"}
+````
+
+## console
+
+The console object has special functions for convenient.
+
+- console.keys apply Object.keys to the argument before output.
+````
+>console.keys({ "foo": "foo" });
+foo
+=>undefined
+````
+
+- console.json applies JSON.stringify to the argument before output.
+````
+>console.json({ "foo": "foo" });
+{"foo":"foo"}
+=>undefined
 ````
 
 # References

@@ -721,9 +721,28 @@ const console = function(repl) {
 
 };
 
+// normal output
 console.prototype.log = function(content) {
 
   const text = "" + content;
+
+  this.repl.currentLog.output(text);
+
+}
+
+// apply JSON.stringify before output for printing objects
+console.prototype.json = function(content) {
+
+  const text = JSON.stringify(content);
+
+  this.repl.currentLog.output(text);
+
+}
+
+// apply Object.keys before output for printing object keys
+console.prototype.keys = function(content) {
+
+  const text = "" + Object.keys(content);
 
   this.repl.currentLog.output(text);
 
