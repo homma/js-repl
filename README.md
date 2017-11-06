@@ -31,20 +31,27 @@ Use load(url) function to import external library.
 
 ## console
 
-The console object has special functions for convenient.
+The console object has special functions for convenience.
 
 - console.keys apply Object.keys to the argument before output.
 ````
->console.keys({ "foo": "foo" });
+> console.keys({ "foo": "foo" });
 foo
-=>undefined
+=> undefined
+````
+
+- console.props applies Object.getOwnPropertyNames to the argument before output.
+````
+> console.props({ "foo": "foo" });
+foo
+=> undefined
 ````
 
 - console.json applies JSON.stringify to the argument before output.
 ````
->console.json({ "foo": "foo" });
+> console.json({ "foo": "foo" });
 {"foo":"foo"}
-=>undefined
+=> undefined
 ````
 
 # References

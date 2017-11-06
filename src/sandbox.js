@@ -51,6 +51,16 @@ console.prototype.keys = function(content) {
 
 }
 
+// apply Object.getOwnPropertyNames before output for printing object keys
+console.prototype.props = function(content) {
+
+  const text = "" + Object.getOwnPropertyNames(content);
+
+  this.repl.currentLog.output(text);
+
+}
+
+
 // sandbox loader
 
 const load = function(root, path) {
