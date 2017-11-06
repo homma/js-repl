@@ -6,6 +6,10 @@
 
 ----
 
+# interact with other web pages
+- open(url) function
+- insert an iframe into the sandbox
+
 # Keyword Completion
 
 # Graphical Output

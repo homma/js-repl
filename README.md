@@ -69,6 +69,9 @@ foo
 => undefined
 ````
 
+# Dependencies
+- uses Esprima for input validation (only a minimum dependency to it, easily replacable with other libraries).
+
 # References
 
 ## JS Bin Console
