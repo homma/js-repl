@@ -42,8 +42,11 @@ foo
 
 - console.props applies Object.getOwnPropertyNames to the argument before output.
 ````
-> console.props({ "foo": "foo" });
-foo
+> console.props("foo");
+0,1,2,length
+=> undefined
+> console.keys("foo");
+0,1,2
 => undefined
 ````
 
