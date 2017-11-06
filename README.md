@@ -6,14 +6,26 @@ JavaScript REPL that works on web browsers.
 
 http://homma.github.io/app/js-repl/
 
-# Usage Note
+# Usage Notes
 
-## language
+## Language
 
-Top level let and const does not save a value in the context.  
-Use var instead.
+Top level let and const does not save a value in the context. Use var instead.
 
-## loading libraries
+````
+> const foo = "foo";
+=> undefined
+> foo
+=> ReferenceError: Can't find variable: foo
+````
+````
+> var foo = "foo";
+=> undefined
+> foo
+=> foo
+````
+
+## Loading Libraries
 
 Use load(url) function to import external library.
 
@@ -25,11 +37,11 @@ Use load(url) function to import external library.
 ````
 > load("https://unpkg.com/esprima@~4.0/dist/esprima.js");
 > var res = esprima.parse("let foo = 'foo'");
-> JSON.stringify(res)
-=> {"type":"Program","body":[{"type":"VariableDeclaration","declarations":[{"type":"VariableDeclarator","id":{"type":"Identifier","name":"foo"},"init":{"type":"Literal","value":"foo","raw":"'foo'"}}],"kind":"let"}],"sourceType":"script"}
+> res.body[0].type
+=> VariableDeclaration
 ````
 
-## console
+## Console
 
 The console object has special functions for convenience.
 
