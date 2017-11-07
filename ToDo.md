@@ -6,11 +6,16 @@
 
 ----
 
-# interact with other web pages
-- open(url) function
-- insert an iframe into the sandbox
-
 # Keyword Completion
 
 # Graphical Output
+
+----
+
+# Won't
+
+## interact with other web pages
+- difficult to make it work as expected because of X-Frame-Options
+- open(url) function
+- insert an iframe into the sandbox
 

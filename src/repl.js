@@ -18,6 +18,8 @@ const repl = function(root) {
   this.prompt = null;
   this.editArea = null;
   this.paddingArea = null;
+  this.sandboxFrame = null;
+
   this.sandbox = null;
 
   this.currentLog = null;
@@ -40,11 +42,10 @@ repl.prototype.init = function() {
   this.prompt = document.getElementById("prompt");
   this.editArea = document.getElementById("editArea");
   this.paddingArea = document.getElementById("paddingArea");
-  this.sandbox = document.getElementById("sandboxFrame").contentWindow;
+  this.sandboxFrame = document.getElementById("sandboxFrame").contentWindow;
 
+  this.sandbox = new jsrepl.sandbox(this);
   this.history = new jsrepl.history();
-
-  this.createSandbox();
 
   this.editArea.focus();
   // this.resetEditArea();
@@ -93,12 +94,6 @@ repl.prototype.createView = function() {
 
 }
 
-repl.prototype.createSandbox = function() {
-
-  jsrepl.sandbox.init(this);
-
-}
-
 repl.prototype.processCode = function(code) {
 
   const log = new jsrepl.log(this);
@@ -123,7 +118,7 @@ repl.prototype.evalCode = function(code) {
 
   try {
 
-    result += this.sandbox.eval(code);
+    result += this.sandboxFrame.eval(code);
 
   } catch(e) {
 
